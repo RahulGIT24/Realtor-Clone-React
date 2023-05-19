@@ -12,7 +12,6 @@ import { db } from "../firebase";
 import { doc, serverTimestamp, setDoc } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import bcrypt from 'bcryptjs';
 
 function Signup() {
   const navigate = useNavigate();
@@ -42,13 +41,6 @@ function Signup() {
     }
   };
 
-  const hashPasswordWithSalt = (inputPassword) => {
-    const salt = bcrypt.genSaltSync(10);
-    return bcrypt.hashSync(inputPassword, salt);
-  };
-
-  let hashedPassword = hashPasswordWithSalt(password)
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -63,14 +55,16 @@ function Signup() {
       });
       const user = userCredential.user;
 
+      const formDataCopy = { ...formData };
+
+      delete formData.password;
       formData.timestamp = serverTimestamp();
-      formData.password = hashedPassword;
+
       await setDoc(doc(db, "users", user.uid), formData);
       navigate("/");
       toast.success("Successfully Signed Up");
     } catch (err) {
       toast.error("Something went wrong with the registeration");
-      console.log(err)
     }
   };
 

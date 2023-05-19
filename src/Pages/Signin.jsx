@@ -1,10 +1,14 @@
 import React, { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash } from "@fortawesome/free-regular-svg-icons";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { signInWithEmailAndPassword, getAuth } from "firebase/auth";
 import OAuth from "../Components/OAuth";
+import { toast } from "react-toastify";
 
 function Signin() {
+  const navigate = useNavigate();
+
   const [formData, setformData] = useState({
     email: "",
     password: "",
@@ -29,7 +33,18 @@ function Signin() {
     }
   };
 
-    
+  const handleSubmit = async (e)=>{
+    e.preventDefault();
+    try {
+      const auth = getAuth()
+      const userCredentials = await signInWithEmailAndPassword(auth,email,password)
+      if(userCredentials.user){
+        navigate("/")
+      }
+    } catch (error) {
+      toast.error("Incorrect user credentials")
+    }
+  }
 
   return (
     <>
@@ -45,7 +60,7 @@ function Signin() {
           />
         </div>
         <div className="w-full md:w-[67%] lg:w-[40%] lg:ml-20">
-          <form action="post" >
+          <form onSubmit={handleSubmit}>
             <input
               type="email"
               className="w-full text-xl px-4 py-2 bg-white text-gray-700 border-gray-300 rounded-lg transition ease-in-out"
