@@ -54,11 +54,13 @@ function Signup() {
         displayName: name,
       });
       const user = userCredential.user;
-      const formDataCopy = { ...formData };
-      delete formData.password;
-      formDataCopy.timestamp = serverTimestamp();
 
-      await setDoc(doc(db, "users", user.uid), formDataCopy);
+      const formDataCopy = { ...formData };
+
+      delete formData.password;
+      formData.timestamp = serverTimestamp();
+
+      await setDoc(doc(db, "users", user.uid), formData);
       navigate("/");
       toast.success("Successfully Signed Up");
     } catch (err) {

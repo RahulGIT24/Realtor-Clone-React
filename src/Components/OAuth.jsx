@@ -1,9 +1,47 @@
 import React from "react";
 import Google from "../Assets/google.ico";
+import { toast } from "react-toastify";
+import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
+import { db } from "../firebase";
+import { doc, getDoc, serverTimestamp, setDoc } from "firebase/firestore";
+import { useNavigate } from "react-router-dom";
 
 function OAuth() {
+  const navigate = useNavigate();
+
+  const onClick = async () => {
+    try {
+      const auth = getAuth();
+      const provider = new GoogleAuthProvider();
+      const result = await signInWithPopup(auth, provider);
+      const user = result.user;
+
+      const docRef = doc(db, "users", user.uid);
+      const docSnap = await getDoc(docRef);
+
+      const data = {
+        name: user.displayName,
+        email: user.email,
+        timstamp: serverTimestamp()
+      };
+
+      if (!docSnap.exists()) {
+        await setDoc(docRef, data);
+        navigate("/");
+        toast.success("Authenticated Successfully");
+      }
+      navigate("/");
+    } catch (error) {
+      toast.error("Unable to authorize with Google!");
+      console.log(error);
+    }
+  };
   return (
-    <button className="w-full bg-red-600 text-white px-7 py-3 text-sm font-medium uppercase border rounded shadow-md hover:bg-red-600 transition duration-150 mt-6 hover:shadow-lg active:bg-red-700 flex justify-center items-center">
+    <button
+      className="w-full bg-red-600 text-white px-7 py-3 text-sm font-medium uppercase border rounded shadow-md hover:bg-red-600 transition duration-150 mt-6 hover:shadow-lg active:bg-red-700 flex justify-center items-center"
+      onClick={onClick}
+      type="button"
+    >
       <img src={Google} alt="google" className="w-8 mx-2" />
       Continue with Google
     </button>
