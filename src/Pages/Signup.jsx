@@ -3,8 +3,19 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash } from "@fortawesome/free-regular-svg-icons";
 import { Link } from "react-router-dom";
 import OAuth from "../Components/OAuth";
+import {
+  getAuth,
+  createUserWithEmailAndPassword,
+  updateProfile,
+} from "firebase/auth";
+import { db } from "../firebase";
+import { doc, serverTimestamp, setDoc } from "firebase/firestore";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 function Signup() {
+  const navigate = useNavigate();
+
   const [formData, setformData] = useState({
     name: "",
     email: "",
@@ -30,6 +41,31 @@ function Signup() {
     }
   };
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const auth = getAuth();
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+      updateProfile(auth.currentUser, {
+        displayName: name,
+      });
+      const user = userCredential.user;
+      const formDataCopy = { ...formData };
+      delete formData.password;
+      formDataCopy.timestamp = serverTimestamp();
+
+      await setDoc(doc(db, "users", user.uid), formDataCopy);
+      navigate("/");
+      toast.success("Successfully Signed Up");
+    } catch (err) {
+      toast.error("Something went wrong with the registeration");
+    }
+  };
+
   return (
     <>
       <section>
@@ -44,7 +80,7 @@ function Signup() {
           />
         </div>
         <div className="w-full md:w-[67%] lg:w-[40%] lg:ml-20">
-          <form action="">
+          <form onSubmit={handleSubmit}>
             <input
               type="text"
               className="w-full text-xl px-4 py-2 mb-4 bg-white text-gray-700 border-gray-300 rounded-lg transition ease-in-out"
@@ -95,13 +131,13 @@ function Signup() {
                 </b>
               </p>
             </div>
+            <button
+              className="w-full bg-blue-600 text-white px-7 py-3 text-sm font-medium uppercase border rounded shadow-md hover:bg-blue-700 transition duration-150 mt-6 hover:shadow-lg active:bg-blue-800"
+              type="submit "
+            >
+              Sign Up
+            </button>
           </form>
-          <button
-            className="w-full bg-blue-600 text-white px-7 py-3 text-sm font-medium uppercase border rounded shadow-md hover:bg-blue-700 transition duration-150 mt-6 hover:shadow-lg active:bg-blue-800"
-            type="submit "
-          >
-            Sign Up
-          </button>
           <div className="my-4 flex  items-center before:border-t  before:flex-1  before:border-gray-500 after:border-t  after:flex-1  after:border-gray-500">
             <p className="text-center font-semibold mx-4">OR</p>
           </div>

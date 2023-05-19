@@ -29,6 +29,8 @@ function Signin() {
     }
   };
 
+    
+
   return (
     <>
       <section>
@@ -43,7 +45,7 @@ function Signin() {
           />
         </div>
         <div className="w-full md:w-[67%] lg:w-[40%] lg:ml-20">
-          <form action="">
+          <form action="post" >
             <input
               type="email"
               className="w-full text-xl px-4 py-2 bg-white text-gray-700 border-gray-300 rounded-lg transition ease-in-out"
@@ -88,13 +90,13 @@ function Signin() {
                 <Link to={"/forgot-password"}>Forgot Password?</Link>
               </p>
             </div>
-          </form>
           <button
             className="w-full bg-blue-600 text-white px-7 py-3 text-sm font-medium uppercase border rounded shadow-md hover:bg-blue-700 transition duration-150 mt-6 hover:shadow-lg active:bg-blue-800"
             type="submit "
           >
             Sign In
           </button>
+          </form>
           <div className="my-4 flex  items-center before:border-t  before:flex-1  before:border-gray-500 after:border-t  after:flex-1  after:border-gray-500">
             <p className="text-center font-semibold mx-4">OR</p>
           </div>
