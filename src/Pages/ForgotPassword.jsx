@@ -1,5 +1,8 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import { toast } from "react-toastify";
+import OAuth from "../Components/OAuth"
+import { getAuth, sendPasswordResetEmail } from "firebase/auth";
 
 function Signin() {
   const [email, setEmail] = useState("");
@@ -8,6 +11,16 @@ function Signin() {
     setEmail(e.target.value);
   };
 
+  const handleSubmit = async(e)=>{
+    e.preventDefault();
+    try {
+      const auth = getAuth();
+      await sendPasswordResetEmail(auth,email)
+      toast.success("Email sent successfully!")
+    } catch (error) {
+      toast("Email not exist")
+    }
+  }
   return (
     <>
       <section>
@@ -24,7 +37,7 @@ function Signin() {
           />
         </div>
         <div className="w-full md:w-[67%] lg:w-[40%] lg:ml-20">
-          <form action="">
+          <form onSubmit={handleSubmit}>
             <input
               type="email"
               className="w-full text-xl px-4 py-2 bg-white text-gray-700 border-gray-300 rounded-lg transition ease-in-out"
@@ -45,13 +58,14 @@ function Signin() {
                 <Link to={"/sign-in"}>Sign In instead</Link>
               </p>
             </div>
-          </form>
           <button
             className="w-full bg-blue-600 text-white px-7 py-3 text-sm font-medium uppercase border rounded shadow-md hover:bg-blue-700 transition duration-150 mt-6 hover:shadow-lg active:bg-blue-800"
             type="submit "
           >
             Recover Account
           </button>
+          </form>
+        <OAuth/>
         </div>
       </div>
     </>
