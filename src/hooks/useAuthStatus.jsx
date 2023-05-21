@@ -10,6 +10,8 @@ export function useAuthStatus() {
     onAuthStateChanged(auth, (user) => {
       if (user) {
         setLoggedin(true);
+      } else {
+        setLoggedin(false);
       }
       setCheckingStatus(false);
     });
