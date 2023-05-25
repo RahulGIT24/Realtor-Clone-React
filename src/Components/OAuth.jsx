@@ -1,14 +1,29 @@
+// Imports from React
 import React from "react";
+
+// Importing google svg
 import Google from "../Assets/google.ico";
+
+// Importing toast from react-toastify
 import { toast } from "react-toastify";
+
+// Imports from firebase auth
 import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
+
+// Importing db
 import { db } from "../firebase";
+
+// Imports from firestore
 import { doc, getDoc, serverTimestamp, setDoc } from "firebase/firestore";
+
+// Imports from react router dom
 import { useNavigate } from "react-router-dom";
 
 function OAuth() {
+  // Initializing userNavigate hook to navigate variable
   const navigate = useNavigate();
 
+  // This function enables user to authorize himself through google
   const onClick = async () => {
     try {
       const auth = getAuth();
@@ -22,9 +37,10 @@ function OAuth() {
       const data = {
         name: user.displayName,
         email: user.email,
-        timstamp: serverTimestamp()
+        timstamp: serverTimestamp(),
       };
 
+      // If the account not already exists
       if (!docSnap.exists()) {
         await setDoc(docRef, data);
         navigate("/");
