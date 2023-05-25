@@ -39,7 +39,7 @@ function Signup() {
     password: "",
   });
 
-  // This stste is used to see password in password input
+  // This state is used to see password in password input
   const [setpassword, showPassword] = useState(false);
 
   // Destructuring email, password and name from formData
