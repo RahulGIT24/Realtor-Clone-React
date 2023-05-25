@@ -62,7 +62,6 @@ function Profile() {
       toast.error("Unable to update profile update");
     }
   };
-  // TODO
   useEffect(() => {
     async function fetchUserListings() {
       const listingRef = collection(db, "listings");
@@ -146,11 +145,17 @@ function Profile() {
           <h2 className="text-2xl text-center font-semibold mb-6">
             My Listings
           </h2>
-          {listings.map((listing, index) => {
-            return (
-              <ListingItem key={index} id={listing.id} listing={listing.data} />
-            );
-          })}
+          <ul className="sm:grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
+            {listings.map((listing, index) => {
+              return (
+                <ListingItem
+                  key={index}
+                  id={listing.id}
+                  listing={listing.data}
+                />
+              );
+            })}
+          </ul>
         </div>
       )}
     </>
