@@ -1,14 +1,27 @@
+// Imports from React
 import React, { useState, useEffect } from "react";
+
+// Importing Spinner Component
 import Spinner from "../Components/Spinner";
+
+// Importing toast from react-toastify
 import { toast } from "react-toastify";
+
+// Imports from firebase storage
 import {
   getStorage,
   ref,
   uploadBytesResumable,
   getDownloadURL,
 } from "firebase/storage";
+
+// Imports from firebase auth
 import { getAuth } from "firebase/auth";
+
+// Imports from uuid
 import { v4 as uuidv4 } from "uuid";
+
+// Imports from firestore
 import {
   serverTimestamp,
   addDoc,
@@ -17,15 +30,29 @@ import {
   doc,
   updateDoc,
 } from "firebase/firestore";
+
+// Importing database
 import { db } from "../firebase";
+
+// Imports from react-router-dom
 import { useNavigate, useParams } from "react-router-dom";
 
 function EditListing() {
+  // Performing user authentication
   const auth = getAuth();
+
+  // Initializing userNavigate hook to navigate variable
   const navigate = useNavigate();
+  // You can use geolocation by google by adding your bank details for address
   const [geolocationEnabled, setgeolocationEnabled] = useState(true);
+
+  // By default loading is false
   const [loading, setLoading] = useState(false);
+
+  // By default listing is null
   const [listing, setListing] = useState(null);
+
+  // Initializing form data
   const [formData, setFormData] = useState({
     type: "rent",
     name: "",
@@ -43,6 +70,7 @@ function EditListing() {
     images: {},
   });
 
+  // Destructuring from data
   const {
     type,
     name,
@@ -60,6 +88,7 @@ function EditListing() {
     images,
   } = formData;
 
+  // This function setFormData by checking various conditions
   const onChange = (e) => {
     let boolean = null;
     if (e.target.value === "true") {
@@ -84,6 +113,7 @@ function EditListing() {
 
   const params = useParams();
 
+  // If listing not belongs to current user he can't edit it
   useEffect(() => {
     if (listing && listing.userRef !== auth.currentUser.uid) {
       toast.error("You can't edit this listing");
@@ -93,6 +123,7 @@ function EditListing() {
 
   useEffect(() => {
     setLoading(true);
+    // This function fetch listings and set from data to listing data from database
     async function fetchListing() {
       const docRef = doc(db, "listings", params.listingId);
       const docSnap = await getDoc(docRef);
@@ -105,9 +136,11 @@ function EditListing() {
         toast.error("Listing does not exist");
       }
     }
+    // Calling fetchListing funtion
     fetchListing();
   }, [navigate, params.listingId]);
 
+  // This function submit form and update listing
   const onSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -122,6 +155,7 @@ function EditListing() {
       return;
     }
 
+    // This function updates images in database
     const storeImage = async (image) => {
       return new Promise((resolve, reject) => {
         const storage = getStorage();
@@ -155,6 +189,7 @@ function EditListing() {
       });
     };
 
+    // Storing Image one by one
     const imgUrls = await Promise.all(
       [...images].map((image) => storeImage(image))
     ).catch((error) => {
@@ -163,13 +198,16 @@ function EditListing() {
       return;
     });
 
+    // Creating a fromData copy
     const formDataCopy = {
+      // It includes formdata, img url, the time it is uploaded, and userRef which defines which user created listing
       ...formData,
       imgUrls,
       timestamp: serverTimestamp(),
       userRef: auth.currentUser.uid,
     };
 
+    // Deleting images from formDataCopy
     delete formDataCopy.images;
     !formDataCopy.offer && delete formDataCopy.discountedPrice;
     delete formDataCopy.latitude;
@@ -181,6 +219,7 @@ function EditListing() {
     navigate(`/category/${formDataCopy.type}/${docRef.id}`);
   };
 
+  // If loading is true returns spinner
   if (loading) {
     return <Spinner />;
   }
