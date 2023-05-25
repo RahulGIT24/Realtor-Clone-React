@@ -100,6 +100,14 @@ function Profile() {
       toast.error("Can't Delete!!");
     }
   };
+
+  const onEdit = async (listingID) => {
+    try {
+      navigate(`/edit-listing/${listingID}`);
+    } catch (error) {
+      toast.error("Can't Edit");
+    }
+  };
   return (
     <>
       <section className="max-w-6xl mx-auto flex justify-center items-center flex-col">
@@ -169,6 +177,7 @@ function Profile() {
                   id={listing.id}
                   listing={listing.data}
                   onDelete={() => onDelete(listing.id)}
+                  onEdit={() => onEdit(listing.id)}
                 />
               );
             })}

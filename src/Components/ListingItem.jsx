@@ -6,7 +6,7 @@ import { MdEdit } from "react-icons/md";
 import { MdDelete } from "react-icons/md";
 
 function ListingItem(props) {
-  let { listing, id, onDelete } = props;
+  let { listing, id, onDelete, onEdit } = props;
   return (
     <li className="relative bg-white flex flex-col justify-between items-center shadow-md hover:shadow-xl rounded-md overflow-hidden transition-shadow duration-150 m-[10px]">
       <Link to={`/category/${listing.type}/${id}`} className="contents">
@@ -62,7 +62,10 @@ function ListingItem(props) {
           onClick={() => onDelete(listing.id)}
         />
       )}
-      <MdEdit className="absolute bottom-2 right-7 h-4 cursor-pointer " />
+      <MdEdit
+        className="absolute bottom-2 right-7 h-4 cursor-pointer "
+        onClick={() => onEdit(listing.id)}
+      />
     </li>
   );
 }
