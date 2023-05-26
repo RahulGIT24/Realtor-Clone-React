@@ -13,6 +13,7 @@ import ForgotPassword from './Pages/ForgotPassword';
 import Offers from './Pages/Offers';
 import CreateListing from './Pages/CreateListing';
 import EditListing from './Pages/EditListing';
+import Listing from './Pages/Listing';
 
 // Imported Components
 import Header from './Components/Header';
@@ -38,6 +39,7 @@ function App() {
           <Route exact path='/sign-up' element={<Signup />} />
           <Route exact path='/forgot-password' element={<ForgotPassword />} />
           <Route exact path='/offers' element={<Offers />} />
+          <Route exact path='/category/:categoryName/:listingId' element={<Listing />} />
           <Route exact path='/create-listing' element={<PrivateRoute />}>
             <Route exact path='/create-listing' element={<CreateListing />} />
           </Route>
