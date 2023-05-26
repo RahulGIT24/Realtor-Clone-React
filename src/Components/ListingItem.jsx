@@ -1,12 +1,21 @@
+// Imports from React
 import React from "react";
+
+// Imports from react router dom
 import { Link } from "react-router-dom";
+
+// Imports from react moment
 import Moment from "react-moment";
+
+// Imports from react icons
 import { MdLocationOn } from "react-icons/md";
 import { MdEdit } from "react-icons/md";
 import { MdDelete } from "react-icons/md";
 
 function ListingItem(props) {
+  // Desturcturing functions from props
   let { listing, id, onDelete, onEdit } = props;
+
   return (
     <li className="relative bg-white flex flex-col justify-between items-center shadow-md hover:shadow-xl rounded-md overflow-hidden transition-shadow duration-150 m-[10px]">
       <Link to={`/category/${listing.type}/${id}`} className="contents">

@@ -1,31 +1,51 @@
+// Imports from React
 import React, { useState } from "react";
+
+// Imports from FontAwesome
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash } from "@fortawesome/free-regular-svg-icons";
+
+// Imports from react router dom
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+
+// Importing OAuth Component
 import OAuth from "../Components/OAuth";
+
+// Imports from firebase auth
 import {
   getAuth,
   createUserWithEmailAndPassword,
   updateProfile,
 } from "firebase/auth";
+
+// Importing Database
 import { db } from "../firebase";
+
+// Importing from firestore of firebase
 import { doc, serverTimestamp, setDoc } from "firebase/firestore";
-import { useNavigate } from "react-router-dom";
+
+// Importing toast from react-toastify
 import { toast } from "react-toastify";
 
 function Signup() {
+  // Initializing userNavigate hook to navigate variable
   const navigate = useNavigate();
 
+  // Initializing from data as an object, by default it's empty
   const [formData, setformData] = useState({
     name: "",
     email: "",
     password: "",
   });
 
+  // This state is used to see password in password input
   const [setpassword, showPassword] = useState(false);
 
+  // Destructuring email, password and name from formData
   const { email, password, name } = formData;
 
+  // This function setFormData
   const onChange = (e) => {
     setformData((prevState) => ({
       ...prevState,
@@ -33,6 +53,7 @@ function Signup() {
     }));
   };
 
+  // This function is used when user wants to see the password he entered
   const handleClick = () => {
     if (setpassword === false) {
       showPassword(true);
@@ -41,15 +62,21 @@ function Signup() {
     }
   };
 
+  // This function is saving data to database
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      // Performing user authentication
       const auth = getAuth();
+
+      // Creating user with email and password
       const userCredential = await createUserWithEmailAndPassword(
         auth,
         email,
         password
       );
+
+      // Updating profile by adding name
       updateProfile(auth.currentUser, {
         displayName: name,
       });
@@ -57,10 +84,15 @@ function Signup() {
 
       const formDataCopy = { ...formData };
 
+      // Removing password from formData
       delete formData.password;
+      // Adding timestamp to formData
       formData.timestamp = serverTimestamp();
 
+      // Setting the document in firebase using setDoc
       await setDoc(doc(db, "users", user.uid), formData);
+
+      // Navigating to home page
       navigate("/");
       toast.success("Successfully Signed Up");
     } catch (err) {

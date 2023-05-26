@@ -1,23 +1,39 @@
+// Imports from React
 import React, { useState } from "react";
+
+// Imports from FontAwesome
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash } from "@fortawesome/free-regular-svg-icons";
+
+// Imports from react router dom
 import { Link, useNavigate } from "react-router-dom";
+
+// Imports from firebase auth
 import { signInWithEmailAndPassword, getAuth } from "firebase/auth";
+
+// Importing OAuth Component
 import OAuth from "../Components/OAuth";
+
+// Importing toast from react-toastify
 import { toast } from "react-toastify";
 
 function Signin() {
+  // Initializing userNavigate hook to navigate variable
   const navigate = useNavigate();
 
+  // Initializing from data as an object, by default it's empty
   const [formData, setformData] = useState({
     email: "",
     password: "",
   });
 
+  // This state is used to see password in password input
   const [setpassword, showPassword] = useState(false);
 
+  // Destructuring email and password from formData
   const { email, password } = formData;
 
+  // This function setFormData
   const onChange = (e) => {
     setformData((prevState) => ({
       ...prevState,
@@ -25,6 +41,7 @@ function Signin() {
     }));
   };
 
+  // This function is used when user wants to see the password he entered
   const handleClick = () => {
     if (setpassword === false) {
       showPassword(true);
@@ -33,19 +50,30 @@ function Signin() {
     }
   };
 
-  const handleSubmit = async (e)=>{
+  // This function is verifying user, whether credentials are wrong or right
+  const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const auth = getAuth()
-      const userCredentials = await signInWithEmailAndPassword(auth,email,password)
-      if(userCredentials.user){
-        toast.success("Welcome Back!")
-        navigate("/")
+      // Performing user authentication
+      const auth = getAuth();
+
+      // Signing with credentials
+      const userCredentials = await signInWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+
+      // If credentials are correct
+      if (userCredentials.user) {
+        toast.success("Welcome Back!");
+        navigate("/");
       }
     } catch (error) {
-      toast.error("Incorrect user credentials")
+      // If credentials are not correct
+      toast.error("Incorrect user credentials");
     }
-  }
+  };
 
   return (
     <>
@@ -106,12 +134,12 @@ function Signin() {
                 <Link to={"/forgot-password"}>Forgot Password?</Link>
               </p>
             </div>
-          <button
-            className="w-full bg-blue-600 text-white px-7 py-3 text-sm font-medium uppercase border rounded shadow-md hover:bg-blue-700 transition duration-150 mt-6 hover:shadow-lg active:bg-blue-800"
-            type="submit "
-          >
-            Sign In
-          </button>
+            <button
+              className="w-full bg-blue-600 text-white px-7 py-3 text-sm font-medium uppercase border rounded shadow-md hover:bg-blue-700 transition duration-150 mt-6 hover:shadow-lg active:bg-blue-800"
+              type="submit "
+            >
+              Sign In
+            </button>
           </form>
           <div className="my-4 flex  items-center before:border-t  before:flex-1  before:border-gray-500 after:border-t  after:flex-1  after:border-gray-500">
             <p className="text-center font-semibold mx-4">OR</p>

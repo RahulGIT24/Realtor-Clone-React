@@ -1,19 +1,31 @@
+// Imports from React
 import React from "react";
+
+// Imports from react router dom
 import { useLocation, useNavigate } from "react-router-dom";
+
+// Importing our custom hook
 import { useAuthStatus } from "../hooks/useAuthStatus";
+
+// Imports from FontAwesome
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser } from "@fortawesome/free-regular-svg-icons";
 
 function Header() {
+  // Initializing userLocation hook to location variable
   const location = useLocation();
+
+  // Initializing userNavigate hook to navigate variable
   const navigate = useNavigate();
 
+  // This function checks whether the path is equal to location
   const pathRoute = (route) => {
     if (route === location.pathname) {
       return true;
     }
   };
 
+  // If user is logged in it will be true
   const { loggedin } = useAuthStatus();
 
   return (
