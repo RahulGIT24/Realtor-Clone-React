@@ -1,17 +1,28 @@
+// CSS
 import './App.css';
+
+// Imports from react router dom
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+
+// Imported Pages
 import Home from './Pages/Home';
 import Profile from './Pages/Profile';
 import Signin from './Pages/Signin';
 import Signup from './Pages/Signup';
 import ForgotPassword from './Pages/ForgotPassword';
 import Offers from './Pages/Offers';
-import Header from './Components/Header';
-import { ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-import PrivateRoute from './Components/PrivateRoute';
 import CreateListing from './Pages/CreateListing';
 import EditListing from './Pages/EditListing';
+
+// Imported Components
+import Header from './Components/Header';
+import PrivateRoute from './Components/PrivateRoute';
+
+// Importin ToastContainer from react-toastify
+import { ToastContainer } from 'react-toastify';
+
+// Importing toast's CSS
+import 'react-toastify/dist/ReactToastify.css';
 
 function App() {
   return (

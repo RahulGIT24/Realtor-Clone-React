@@ -1,8 +1,19 @@
+// Imports from React
 import React, { useEffect, useState } from "react";
+
+// Imports from firebase auth
 import { getAuth, updateProfile } from "firebase/auth";
+
+// Imports from react router dom
 import { Link, useNavigate } from "react-router-dom";
+
+// Importing toast from react-toastify
 import { toast } from "react-toastify";
+
+// Importing database
 import { db } from "../firebase";
+
+// Imports from firestore
 import {
   collection,
   deleteDoc,
@@ -13,29 +24,41 @@ import {
   updateDoc,
   where,
 } from "firebase/firestore";
+
+// Imports from react icons
 import { FcHome } from "react-icons/fc";
+
+// Importing listingitem component
 import ListingItem from "../Components/ListingItem";
 
 function Profile() {
+  // Initializing userNavigate hook to navigate variable
   const navigate = useNavigate();
+
+  // Performing user authentication
   const auth = getAuth();
 
+  // Settting form data by default it's user current name and email
   const [formData, setFormData] = useState({
     name: auth.currentUser.displayName,
     email: auth.currentUser.email,
   });
 
+  // By default change details are false
   const [changeDetail, setChangeDetail] = useState(false);
   const [listings, setListings] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  // Destructuring name and email from formdata
   const { name, email } = formData;
 
+  // This function is used to sign out the user
   const logout = () => {
     auth.signOut();
     navigate("/");
   };
 
+  // This function set's new value to form data
   const onChange = (e) => {
     setFormData((prevState) => ({
       ...prevState,
@@ -43,6 +66,7 @@ function Profile() {
     }));
   };
 
+  // This function updates form data in database
   const onSubmit = async () => {
     try {
       if (auth.currentUser.displayName !== name) {
@@ -63,7 +87,9 @@ function Profile() {
       toast.error("Unable to update profile update");
     }
   };
+
   useEffect(() => {
+    // This function fethces user listings
     async function fetchUserListings() {
       const listingRef = collection(db, "listings");
       const q = query(
@@ -85,6 +111,7 @@ function Profile() {
     fetchUserListings();
   }, [auth.currentUser.uid]);
 
+  // This function deletes lsitings
   const onDelete = async (listingID) => {
     try {
       if (window.confirm("Are you sure you want to delete")) {
@@ -101,6 +128,7 @@ function Profile() {
     }
   };
 
+  // This function edits user listings
   const onEdit = async (listingID) => {
     try {
       navigate(`/edit-listing/${listingID}`);

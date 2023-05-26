@@ -1,23 +1,48 @@
+// Imports from React
 import React, { useState } from "react";
+
+// Importing Spinner Component
 import Spinner from "../Components/Spinner";
+
+// Importing toast from react-toastify
 import { toast } from "react-toastify";
+
+// Imports from firebase storage
 import {
   getStorage,
   ref,
   uploadBytesResumable,
   getDownloadURL,
 } from "firebase/storage";
+
+// Imports from firebase auth
 import { getAuth } from "firebase/auth";
+
+// Imports from uuid
 import { v4 as uuidv4 } from "uuid";
+
+// Imports from firestore
 import { serverTimestamp, addDoc, collection } from "firebase/firestore";
+
+// Importing database
 import { db } from "../firebase";
+
+// Imports from react-router-dom
 import { useNavigate } from "react-router-dom";
 
 function CreateListing() {
+  // Performing user authentication
   const auth = getAuth();
+
+  // Initializing userNavigate hook to navigate variable
   const navigate = useNavigate();
+  // You can use geolocation by google by adding your bank details for address
   const [geolocationEnabled, setgeolocationEnabled] = useState(true);
+
+  // By default loading is false
   const [loading, setLoading] = useState(false);
+
+  // Initializing form data
   const [formData, setFormData] = useState({
     type: "rent",
     name: "",
@@ -35,6 +60,7 @@ function CreateListing() {
     images: {},
   });
 
+  // Destructuring from data
   const {
     type,
     name,
@@ -52,6 +78,7 @@ function CreateListing() {
     images,
   } = formData;
 
+  // This function setFormData by checking various conditions
   const onChange = (e) => {
     let boolean = null;
     if (e.target.value === "true") {
@@ -74,6 +101,7 @@ function CreateListing() {
     }
   };
 
+  // This function submit form and create listing
   const onSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -88,6 +116,7 @@ function CreateListing() {
       return;
     }
 
+    // This function store images to database
     const storeImage = async (image) => {
       return new Promise((resolve, reject) => {
         const storage = getStorage();
@@ -121,6 +150,7 @@ function CreateListing() {
       });
     };
 
+    // Storing Image one by one
     const imgUrls = await Promise.all(
       [...images].map((image) => storeImage(image))
     ).catch((error) => {
@@ -129,13 +159,16 @@ function CreateListing() {
       return;
     });
 
+    // Creating a fromData copy
     const formDataCopy = {
+      // It includes formdata, img url, the time it is uploaded, and userRef which defines which user created listing
       ...formData,
       imgUrls,
       timestamp: serverTimestamp(),
       userRef: auth.currentUser.uid,
     };
 
+    // Deleting images from formDataCopy
     delete formDataCopy.images;
     !formDataCopy.offer && delete formDataCopy.discountedPrice;
     delete formDataCopy.latitude;
@@ -146,6 +179,7 @@ function CreateListing() {
     navigate(`/category/${formDataCopy.type}/${docRef.id}`);
   };
 
+  // If loading is true returns spinner
   if (loading) {
     return <Spinner />;
   }
