@@ -29,7 +29,6 @@ import "swiper/css/bundle";
 // React icons used in this page
 import { MdFileCopy } from "react-icons/md";
 import {
-  FaShare,
   FaMapMarkerAlt,
   FaBed,
   FaBath,
