@@ -45,7 +45,7 @@ function Header() {
           <ul className="flex space-x-10">
             <li
               className={`py-3 text-sm font-semibold cursor-pointer text-gray-600 border-b-4 border-b-transparent ${
-                pathRoute("/") && "text-black border-b-red-700"
+                pathRoute("/") && "text-red-700"
               }`}
               onClick={() => {
                 navigate("/");
@@ -55,7 +55,7 @@ function Header() {
             </li>
             <li
               className={`py-3 text-sm font-semibold cursor-pointer text-gray-600 border-b-4 border-b-transparent ${
-                pathRoute("/offers") && "text-black border-b-red-700"
+                pathRoute("/offers") && "text-red-700"
               }`}
               onClick={() => {
                 navigate("/offers");
@@ -66,7 +66,7 @@ function Header() {
             {loggedin ? (
               <li
                 className={`py-3 text-sm font-semibold cursor-pointer text-gray-600 border-b-4 border-b-transparent ${
-                  pathRoute("/profile") && "text-black border-b-red-700"
+                  pathRoute("/profile") && "text-red-700 "
                 }`}
                 onClick={() => {
                   navigate("/profile");
@@ -78,7 +78,7 @@ function Header() {
             ) : (
               <li
                 className={`py-3 text-sm font-semibold cursor-pointer text-gray-600 border-b-4 border-b-transparent ${
-                  pathRoute("/sign-in") && "text-black border-b-red-700"
+                  pathRoute("/sign-in") && "text-red-700"
                 }`}
                 onClick={() => {
                   navigate("/sign-in");
